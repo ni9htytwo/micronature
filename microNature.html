@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>microNature — 物理智能基础设施</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;600&family=Noto+Serif+SC:wght@400;600&display=swap');
+
+        :root {
+            --paper: #fdfcfb;
+            --ink: #1a1a1a;
+            --accent: #2d4a3e;
+            --line: #e0e0e0;
+            --gray-light: #e0e0e0;
+            --gray-mid: #757575;
+            --gray-soft: #9a9a9a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            color: var(--ink);
+            line-height: 1.8;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page {
+            background-color: var(--paper);
+            width: 100%;
+            max-width: 1100px;
+            padding: 100px 80px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'EB Garamond', 'Noto Serif SC', serif;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gray-mid);
+        }
+
+        /* ── HEADER ───────────────────────────── */
+        header { text-align: center; margin-bottom: 80px; }
+
+        header h1 {
+            font-size: 46px;
+            margin-bottom: 20px;
+            line-height: 1.15;
+        }
+
+        header .brand-line {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gray-mid);
+            margin-bottom: 30px;
+        }
+
+        header .brand-line .brand-cn {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            margin-left: 12px;
+        }
+
+        header .subtitle {
+            font-size: 18px;
+            font-weight: 300;
+            color: var(--gray-mid);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        header .thesis {
+            margin: 34px auto 34px;
+            max-width: 640px;
+            background-color: rgba(45, 74, 62, 0.03);
+            border: 1px solid rgba(45, 74, 62, 0.1);
+            padding: 28px 36px;
+            font-size: 15px;
+            line-height: 1.9;
+            font-weight: 300;
+            text-align: left;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--gray-light);
+            margin: 60px 0;
+        }
+
+        /* ── PROSE ────────────────────────────── */
+        .prose {
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 1.9;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .prose strong { font-weight: 600; color: var(--ink); }
+
+        .prose u { text-decoration: underline; text-underline-offset: 3px; }
+
+        .lead {
+            font-size: 17px;
+            font-weight: 300;
+            line-height: 1.9;
+            color: #444;
+            margin-bottom: 30px;
+        }
+
+        .section-label { margin-bottom: 12px; display: block; }
+
+        .section-title {
+            font-size: 30px;
+            margin-bottom: 30px;
+            line-height: 1.3;
+        }
+
+        /* ── TOC ──────────────────────────────── */
+        .toc-nav ol {
+            list-style: none;
+            margin: 30px 0 0;
+            padding: 0;
+            columns: 2;
+            column-gap: 60px;
+        }
+
+        .toc-nav li { break-inside: avoid; border-bottom: 1px solid var(--gray-light); }
+
+        .toc-nav a {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            padding: 13px 0;
+            text-decoration: none;
+            color: var(--ink);
+        }
+
+        .toc-nav a:hover .toc-title-sm,
+        .toc-nav a:hover .toc-label { color: var(--accent); }
+        .toc-nav a:hover .toc-title-sm { text-decoration: underline; text-underline-offset: 3px; }
+
+        .toc-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--gray-soft);
+            flex-shrink: 0;
+        }
+
+        .toc-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-mid);
+            flex-shrink: 0;
+            width: 68px;
+        }
+
+        .toc-title-sm {
+            font-family: 'EB Garamond', 'Noto Serif SC', serif;
+            font-size: 14px;
+            color: var(--ink);
+        }
+
+        /* ── SVG ──────────────────────────────── */
+        .svg-container { margin: 50px 0; text-align: center; }
+        .svg-container svg { max-width: 100%; height: auto; }
+
+        .figure-note {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gray-soft);
+            margin-top: 12px;
+        }
+
+        /* ── VALUE BOX ────────────────────────── */
+        .value-box {
+            background-color: rgba(45, 74, 62, 0.03);
+            border: 1px solid rgba(45, 74, 62, 0.1);
+            padding: 40px 50px;
+            margin: 50px 0;
+        }
+
+        .value-box .label {
+            color: var(--accent);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .value-box p { font-size: 15px; font-weight: 300; line-height: 1.9; }
+
+        /* ── HARD CARD (pi-style) ─────────────── */
+        .hard-card {
+            background: #fff;
+            border: 1px solid var(--ink);
+            padding: 32px 36px;
+        }
+
+        /* ── GRIDS ────────────────────────────── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr;
+            gap: 50px;
+            margin: 50px 0;
+        }
+
+        .two-col .divider { background-color: var(--gray-light); }
+        .two-col h3 { font-size: 22px; margin-bottom: 16px; }
+        .two-col p { font-size: 14px; font-weight: 300; line-height: 1.8; color: #444; }
+
+        .three-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 40px;
+            margin: 50px 0;
+        }
+
+        .three-col h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .three-col p { font-size: 13px; font-weight: 300; color: var(--gray-mid); line-height: 1.7; }
+
+        .four-col {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin: 44px 0;
+        }
+
+        .four-col .cell {
+            border: 1px solid var(--line);
+            background: #fff;
+            padding: 24px 22px;
+        }
+
+        .four-col .cell h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .four-col .cell p { font-size: 12.5px; font-weight: 300; color: #555; line-height: 1.7; }
+
+        /* ── PIPELINE ─────────────────────────── */
+        .pipeline { margin: 50px 0; }
+
+        .pipeline-step {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: start;
+        }
+
+        .pipeline-step .step-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding-top: 3px;
+        }
+
+        .pipeline-step h3 { font-size: 18px; margin-bottom: 8px; }
+
+        .pipeline-step p { font-size: 14px; font-weight: 300; line-height: 1.8; color: #444; }
+
+        .pipeline-step .deliverable {
+            font-size: 12px;
+            color: var(--gray-mid);
+            font-style: italic;
+            font-family: 'EB Garamond', 'Noto Serif SC', serif;
+            margin-top: 6px;
+        }
+
+        /* ── TABLE ────────────────────────────── */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 36px 0;
+            font-size: 13px;
+        }
+
+        .comparison-table th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-mid);
+            font-weight: 400;
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .comparison-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 300;
+            vertical-align: top;
+            line-height: 1.6;
+        }
+
+        .comparison-table td:first-child {
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--ink);
+            white-space: nowrap;
+        }
+
+        .comparison-table td:last-child { color: var(--accent); }
+
+        /* ── TEAM ─────────────────────────────── */
+        .team-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .team-member {
+            padding: 30px;
+            border: 1px solid #eee;
+            background: rgba(255,255,255,0.5);
+        }
+
+        .team-member.full-width { grid-column: 1 / -1; }
+        .team-member h4 { font-size: 20px; margin-bottom: 4px; }
+
+        .team-member .role {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .team-member .cred {
+            display: block;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            color: var(--gray-mid);
+            margin-top: -8px;
+            margin-bottom: 14px;
+        }
+
+        .team-member p { font-size: 13px; font-weight: 300; line-height: 1.8; color: #555; }
+        .team-member p + p { margin-top: 10px; }
+
+        /* ── SOURCES ──────────────────────────── */
+        .sources li {
+            font-size: 12px;
+            font-weight: 300;
+            color: var(--gray-mid);
+            line-height: 1.8;
+            margin-bottom: 8px;
+            list-style: none;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .sources li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: var(--gray-soft);
+        }
+
+        /* ── TOPBAR ──────────────────────────── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            background-color: rgba(253, 252, 251, 0.94);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .topbar-in {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 4px 24px;
+        }
+
+        .tb-brand {
+            font-family: 'EB Garamond', 'Noto Serif SC', serif;
+            font-size: 16px;
+            color: var(--ink);
+            text-decoration: none;
+            padding: 12px 0;
+        }
+
+        .tb-brand em { font-style: italic; color: var(--accent); }
+        a.tb-brand:hover em { text-decoration: underline; text-underline-offset: 3px; }
+        span.tb-brand { cursor: default; }
+
+        .topnav { display: flex; gap: 22px; flex-wrap: wrap; }
+
+        .topnav a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.1em;
+            color: var(--gray-mid);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            padding: 16px 0;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .topnav a:hover { color: var(--ink); border-color: var(--gray-light); }
+
+        .topnav a[aria-current="page"],
+        .topnav .cur {
+            color: var(--accent);
+            border-color: rgba(45, 74, 62, 0.4);
+        }
+
+        .topnav .cur {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.1em;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(45, 74, 62, 0.4);
+        }
+
+        /* ── CROSS-LINKS ─────────────────────── */
+        a.xlink {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(45, 74, 62, 0.35);
+        }
+
+        a.xlink:hover { border-bottom-color: var(--accent); }
+
+        a.xlink-soft {
+            color: var(--gray-mid);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--gray-soft);
+        }
+
+        a.xlink-soft:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+        /* ── FLAGSHIP PRODUCT CTA ────────────── */
+        a.product-cta {
+            display: block;
+            margin-top: 56px;
+            padding: 40px 50px;
+            border: 1px solid var(--accent);
+            background-color: rgba(45, 74, 62, 0.03);
+            text-decoration: none;
+            transition: background-color 0.15s;
+        }
+
+        a.product-cta:hover { background-color: rgba(45, 74, 62, 0.06); }
+
+        .product-cta .pc-label { color: var(--accent); display: block; margin-bottom: 14px; }
+        .product-cta .pc-title { font-size: 26px; line-height: 1.3; margin-bottom: 12px; color: var(--ink); }
+        .product-cta .pc-desc { font-size: 14px; font-weight: 300; line-height: 1.8; color: #444; max-width: 660px; }
+
+        .product-cta .pc-go {
+            display: inline-block;
+            margin-top: 22px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+        }
+
+        /* ── FOOTER ───────────────────────────── */
+        footer {
+            border-top: 1px solid var(--ink);
+            padding-top: 30px;
+            margin-top: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+        }
+
+        .footer-brand { font-family: 'EB Garamond', serif; font-size: 22px; }
+        .footer-right { text-align: right; font-size: 12px; color: var(--gray-mid); }
+
+        /* ── RESPONSIVE ───────────────────────── */
+        @media (max-width: 768px) {
+            .topbar { position: static; }
+            .topbar-in { padding: 10px 16px; }
+            .topnav a { padding: 8px 0; }
+            .topnav .cur { padding: 8px 0; }
+            .page { padding: 50px 30px; }
+            header h1 { font-size: 32px; }
+            header .brand-line { font-size: 9px; letter-spacing: 0.1em; }
+            header .brand-line .brand-cn { font-size: 10px; letter-spacing: 0.1em; margin-left: 6px; }
+            header .thesis { padding: 20px 22px; }
+            .section-title { font-size: 24px; }
+            .two-col { grid-template-columns: 1fr; }
+            .two-col .divider { display: none; }
+            .three-col, .team-grid { grid-template-columns: 1fr; }
+            .four-col { grid-template-columns: 1fr 1fr; }
+            .pipeline-step { grid-template-columns: 1fr; gap: 8px; }
+            .toc-nav ol { columns: 1; }
+            .product-cta { padding: 28px 24px; }
+            .product-cta .pc-title { font-size: 22px; }
+            footer { flex-direction: column; align-items: flex-start; }
+            .footer-right { text-align: left; }
+        }
+
+        @media (max-width: 440px) {
+            .four-col { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="topbar" aria-label="站点导航">
+    <div class="topbar-in">
+        <span class="tb-brand">microNature · 物理智能基础设施</span>
+        <div class="topnav">
+            <span class="cur" aria-current="page">microNature</span>
+            <a href="ea0811.html">Environment Affordance™</a>
+            <a href="ea0811-demo.html">产品示例</a>
+            <a href="mn0811-attachment.html">思考</a>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+
+    <!-- ═══════════════ HEADER ═══════════════ -->
+    <header>
+        <div class="brand-line">Domain-Native Physical Intelligence Infra<span class="brand-cn">· 场景原生物理智能基建</span></div>
+        <h1>microNature</h1>
+        <p class="subtitle">microNature 建设物理智能的真实世界基础设施。我们把真实部署场景变成可以训练机器、可被验证、可打分的数字测试场，并实现轻量环境训练 → 验证 → 部署的全流程。</p>
+        <div class="thesis">
+            前沿技术与实地部署之间的鸿沟无法仅凭更好的模型出现而弥合，它需要真实的物理世界的基建来收窄。microNature 应需而生。
+        </div>
+    </header>
+
+    <!-- ═══════════════ TOC ═══════════════ -->
+    <section id="toc">
+        <span class="mono section-label">目录 · Contents</span>
+        <nav class="toc-nav">
+            <ol>
+                <li><a href="#s1"><span class="toc-num">01</span><span class="toc-label">架构</span><span class="toc-title-sm">microNature · Real-Sim-Real</span></a></li>
+                <li><a href="#s2"><span class="toc-num">02</span><span class="toc-label">有何不同</span><span class="toc-title-sm">领域原生的路径，机器视角的打法</span></a></li>
+                <li><a href="#s3"><span class="toc-num">03</span><span class="toc-label">何以见得</span><span class="toc-title-sm">基于成熟技术，在应用层创新</span></a></li>
+                <li><a href="#s4"><span class="toc-num">04</span><span class="toc-label">路径</span><span class="toc-title-sm">现在收窄 gap，将来供给直觉</span></a></li>
+                <li><a href="#s5"><span class="toc-num">05</span><span class="toc-label">团队</span><span class="toc-title-sm">Team</span></a></li>
+            </ol>
+        </nav>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ 01 ARCHITECTURE ═══════════════ -->
+    <section id="s1">
+        <span class="mono section-label">01 · Architecture</span>
+        <h2 class="section-title">microNature · Real-Sim-Real</h2>
+
+        <p class="prose">microNature 的业务流程是完整的 <strong>real → sim → real</strong>，可灵活拆解为 real-sim 半链，或交付全链条。核心是：领域原生的物理场景对接所有类型的智能硬件，完成轻量部署环境训练 · 验证 · 部署全流程。</p>
+
+        <div class="svg-container">
+            <svg viewBox="0 0 960 790" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, Consolas, monospace">
+                <defs>
+                    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                        <path d="M0,0 L10,5 L0,10 z" fill="#1a1a1a"/>
+                    </marker>
+                </defs>
+                <rect x="0" y="0" width="960" height="790" fill="white"/>
+
+                <!-- top inputs -->
+                <text x="480" y="34" text-anchor="middle" font-size="10" fill="#9a9a9a" letter-spacing="2">TASK &amp; BODY INPUT</text>
+                <rect x="250" y="48" width="200" height="58" fill="white" stroke="#1a1a1a" stroke-width="1.2"/>
+                <text x="350" y="72" text-anchor="middle" font-size="12" fill="#1a1a1a" font-weight="bold">LLM TASK</text>
+                <text x="350" y="90" text-anchor="middle" font-size="10" fill="#757575">任务编码 · 0.1–1Hz</text>
+                <rect x="510" y="48" width="200" height="58" fill="white" stroke="#1a1a1a" stroke-width="1.2"/>
+                <text x="610" y="72" text-anchor="middle" font-size="12" fill="#1a1a1a" font-weight="bold">ROBOT FILES</text>
+                <text x="610" y="90" text-anchor="middle" font-size="10" fill="#757575">本体数字分身 · URDF</text>
+                <line x1="350" y1="106" x2="350" y2="152" stroke="#1a1a1a" stroke-width="1.1" marker-end="url(#arr)"/>
+                <line x1="610" y1="106" x2="610" y2="152" stroke="#1a1a1a" stroke-width="1.1" marker-end="url(#arr)"/>
+
+                <!-- REAL column -->
+                <rect x="40" y="200" width="225" height="270" fill="white" stroke="#1a1a1a" stroke-width="1.2"/>
+                <text x="152" y="232" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="bold">REAL</text>
+                <text x="152" y="250" text-anchor="middle" font-size="10" fill="#757575">真实场地 · 领域原生</text>
+                <line x1="60" y1="264" x2="245" y2="264" stroke="#e0e0e0" stroke-width="1"/>
+                <text x="152" y="288" text-anchor="middle" font-size="10.5" fill="#333">视觉 · vision</text>
+                <text x="152" y="310" text-anchor="middle" font-size="10.5" fill="#333">激光 · lidar</text>
+                <text x="152" y="332" text-anchor="middle" font-size="10.5" fill="#333">温湿度 · thermal</text>
+                <text x="152" y="354" text-anchor="middle" font-size="10.5" fill="#333">毫米波 · mmWave</text>
+                <text x="152" y="376" text-anchor="middle" font-size="10.5" fill="#333">触觉 · tactile</text>
+                <text x="152" y="398" text-anchor="middle" font-size="10.5" fill="#333">力控 · force</text>
+                <text x="152" y="440" text-anchor="middle" font-size="9.5" fill="#9a9a9a" font-style="italic">多模态物理量采集</text>
+
+                <!-- SIM column -->
+                <rect x="335" y="165" width="290" height="340" fill="white" stroke="#1a1a1a" stroke-width="1.6" stroke-dasharray="1,0"/>
+                <text x="480" y="196" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="bold" letter-spacing="1">PHYSICS-NATIVE SIM</text>
+                <text x="480" y="214" text-anchor="middle" font-size="10" fill="#2d4a3e" letter-spacing="2">microNature</text>
+                <rect x="355" y="232" width="250" height="58" fill="white" stroke="#1a1a1a" stroke-width="1"/>
+                <text x="480" y="256" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="bold">PHYSICS ENGINE</text>
+                <text x="480" y="274" text-anchor="middle" font-size="9.5" fill="#757575">场景原生 · 几何+物理+动力学</text>
+                <rect x="355" y="302" width="250" height="58" fill="white" stroke="#1a1a1a" stroke-width="1"/>
+                <text x="480" y="326" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="bold">FULL-DOMAIN PERCEPTION</text>
+                <text x="480" y="344" text-anchor="middle" font-size="9.5" fill="#757575">全域感知融合 · 物理量运行</text>
+                <rect x="355" y="372" width="250" height="58" fill="#f5f5f2" stroke="#2d4a3e" stroke-width="1.4"/>
+                <text x="480" y="396" text-anchor="middle" font-size="11" fill="#2d4a3e" font-weight="bold">EA · ENVIRONMENT AFFORDANCE</text>
+                <text x="480" y="414" text-anchor="middle" font-size="9.5" fill="#757575">可为性标注 · 对抗验证 · 评分</text>
+                <text x="480" y="468" text-anchor="middle" font-size="9.5" fill="#9a9a9a" font-style="italic">轻量 训练 · 验证</text>
+
+                <!-- DEPLOY column -->
+                <rect x="695" y="200" width="225" height="270" fill="white" stroke="#1a1a1a" stroke-width="1.2"/>
+                <text x="807" y="232" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="bold">DEPLOY</text>
+                <text x="807" y="250" text-anchor="middle" font-size="10" fill="#757575">异构智能硬件</text>
+                <line x1="715" y1="264" x2="900" y2="264" stroke="#e0e0e0" stroke-width="1"/>
+                <text x="807" y="292" text-anchor="middle" font-size="10.5" fill="#333">四足 · legged</text>
+                <text x="807" y="314" text-anchor="middle" font-size="10.5" fill="#333">轮式 · wheeled</text>
+                <text x="807" y="336" text-anchor="middle" font-size="10.5" fill="#333">无人机 · UAV</text>
+                <text x="807" y="358" text-anchor="middle" font-size="10.5" fill="#333">机械臂 · arm</text>
+                <text x="807" y="380" text-anchor="middle" font-size="10.5" fill="#333">自动驾驶 · AV</text>
+                <text x="807" y="440" text-anchor="middle" font-size="9.5" fill="#9a9a9a" font-style="italic">考核通过的机器进场</text>
+
+                <!-- horizontal arrows -->
+                <line x1="265" y1="335" x2="327" y2="335" stroke="#1a1a1a" stroke-width="1.3" marker-end="url(#arr)"/>
+                <text x="296" y="322" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="bold">R2S</text>
+                <line x1="625" y1="335" x2="687" y2="335" stroke="#1a1a1a" stroke-width="1.3" marker-end="url(#arr)"/>
+                <text x="656" y="322" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="bold">S2R</text>
+
+                <!-- flywheel -->
+                <rect x="40" y="560" width="880" height="76" fill="#f5f5f2" stroke="#1a1a1a" stroke-width="1.2"/>
+                <text x="480" y="592" text-anchor="middle" font-size="13" fill="#1a1a1a" font-weight="bold" letter-spacing="1">DATA FLYWHEEL</text>
+                <text x="480" y="614" text-anchor="middle" font-size="10" fill="#757575">与产业域 co-build · 场景数据 ↔ 验证标准 · 双向积累</text>
+                <path d="M807,470 L807,520 Q807,540 787,540 L500,540 Q480,540 480,552 L480,556" fill="none" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#arr)"/>
+                <path d="M152,470 L152,520 Q152,540 172,540 L460,540 Q480,540 480,552" fill="none" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="5,4"/>
+                <text x="480" y="532" text-anchor="middle" font-size="9" fill="#9a9a9a" letter-spacing="1">DEPLOYMENT FEEDBACK</text>
+
+                <!-- plug-in docks -->
+                <text x="480" y="678" text-anchor="middle" font-size="10" fill="#9a9a9a" letter-spacing="2">PLUG-IN STACKS · 可插拔</text>
+                <rect x="180" y="692" width="270" height="56" fill="white" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="4,3"/>
+                <text x="315" y="716" text-anchor="middle" font-size="11.5" fill="#1a1a1a" font-weight="bold">SENSING STACK</text>
+                <text x="315" y="734" text-anchor="middle" font-size="9.5" fill="#757575">任意感知栈 plug in</text>
+                <rect x="510" y="692" width="270" height="56" fill="white" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="4,3"/>
+                <text x="645" y="716" text-anchor="middle" font-size="11.5" fill="#1a1a1a" font-weight="bold">POLICY STACK</text>
+                <text x="645" y="734" text-anchor="middle" font-size="9.5" fill="#757575">任意策略栈 plug in</text>
+                <line x1="315" y1="692" x2="315" y2="650" stroke="#9a9a9a" stroke-width="0.9" stroke-dasharray="2,4"/>
+                <line x1="645" y1="692" x2="645" y2="650" stroke="#9a9a9a" stroke-width="0.9" stroke-dasharray="2,4"/>
+                <text x="480" y="776" text-anchor="middle" font-size="9.5" fill="#9a9a9a">microNature — real-sim-real · 完成轻量部署环境训练 · 验证 · 部署全流程</text>
+            </svg>
+            <div class="figure-note">FIG.01 — microNature architecture · real-sim-real</div>
+        </div>
+
+        <p class="prose">链条可整，亦可拆，对应三种模块化产品形态：</p>
+
+        <div class="three-col">
+            <div class="hard-card" style="padding:24px 26px;">
+                <h3 style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.08em; margin-bottom:10px;">M1 · REAL→SIM</h3>
+                <p style="font-size:13px; font-weight:300; color:#444; line-height:1.75;">真实场景数字化与物理原生重建。交付可复用的数字考场——三维底图一次建库，多机复用。</p>
+            </div>
+            <div class="hard-card" style="padding:24px 26px;">
+                <h3 style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.08em; margin-bottom:10px;">M2 · EA 验证</h3>
+                <p style="font-size:13px; font-weight:300; color:#444; line-height:1.75;"><a class="xlink" href="ea0811.html">Environment Affordance™</a> 单独交付。按本体参数做可为性标注与对抗验证，出<a class="xlink" href="ea0811-demo.html">评分与样例</a>。</p>
+            </div>
+            <div class="hard-card" style="padding:24px 26px;">
+                <h3 style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.08em; margin-bottom:10px;">M3 · R2S2R 全链</h3>
+                <p style="font-size:13px; font-weight:300; color:#444; line-height:1.75;">轻量训练 → 验证 → 部署全闭环。与产业域 co-build，部署反馈回流，数据飞轮持续积累。</p>
+            </div>
+        </div>
+
+        <!-- EA core component -->
+        <div style="margin-top:56px;">
+            <h3 class="section-title" style="font-size:24px;">核心组件 <a class="xlink" href="ea0811.html">Environment Affordance™</a> — 为各式机器人和智能设备提供预对齐、预演练和准入考场</h3>
+
+            <p class="prose">EA（Environment Affordance）是 microNature 架构里最独特的组件：<strong>从机器人视角和任务出发，在可复用的物理真实场景中做 validate。</strong>不是问「这台通用机器人能做什么」，而是问「这片真实场景里，这台具体的机器，哪些事可为、哪些事不可为」——答案以评分和报告交付。</p>
+
+            <div class="svg-container">
+                <svg viewBox="0 0 860 400" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, Consolas, monospace">
+                    <defs>
+                        <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                            <path d="M0,0 L10,5 L0,10 z" fill="#1a1a1a"/>
+                        </marker>
+                    </defs>
+                    <rect x="0" y="0" width="860" height="400" fill="white"/>
+                    <rect x="40" y="40" width="215" height="82" fill="white" stroke="#1a1a1a" stroke-width="1.1"/>
+                    <text x="147" y="74" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="bold">REUSABLE REAL SCENE</text>
+                    <text x="147" y="94" text-anchor="middle" font-size="10" fill="#757575">可复用物理实景</text>
+                    <rect x="40" y="155" width="215" height="82" fill="white" stroke="#1a1a1a" stroke-width="1.1"/>
+                    <text x="147" y="189" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="bold">ROBOT BODY</text>
+                    <text x="147" y="209" text-anchor="middle" font-size="10" fill="#757575">机器人本体参数</text>
+                    <rect x="40" y="270" width="215" height="82" fill="white" stroke="#1a1a1a" stroke-width="1.1"/>
+                    <text x="147" y="304" text-anchor="middle" font-size="11" fill="#1a1a1a" font-weight="bold">ALIGNED TASK</text>
+                    <text x="147" y="324" text-anchor="middle" font-size="10" fill="#757575">对齐的任务</text>
+                    <line x1="255" y1="81" x2="348" y2="175" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr2)"/>
+                    <line x1="255" y1="196" x2="348" y2="196" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr2)"/>
+                    <line x1="255" y1="311" x2="348" y2="217" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arr2)"/>
+                    <rect x="352" y="130" width="235" height="132" fill="#f5f5f2" stroke="#2d4a3e" stroke-width="1.6"/>
+                    <text x="469" y="170" text-anchor="middle" font-size="14" fill="#2d4a3e" font-weight="bold">EA ENGINE</text>
+                    <text x="469" y="192" text-anchor="middle" font-size="10" fill="#757575">机器人视角 · 任务对齐</text>
+                    <text x="469" y="210" text-anchor="middle" font-size="10" fill="#757575">可为性计算 · 感知对抗</text>
+                    <text x="469" y="228" text-anchor="middle" font-size="10" fill="#757575">闭环评分</text>
+                    <line x1="587" y1="196" x2="668" y2="196" stroke="#1a1a1a" stroke-width="1.2" marker-end="url(#arr2)"/>
+                    <rect x="672" y="130" width="150" height="132" fill="white" stroke="#1a1a1a" stroke-width="1.4"/>
+                    <text x="747" y="168" text-anchor="middle" font-size="12" fill="#1a1a1a" font-weight="bold">SCORE</text>
+                    <text x="747" y="196" text-anchor="middle" font-size="12" fill="#1a1a1a" font-weight="bold">REPORT</text>
+                    <text x="747" y="224" text-anchor="middle" font-size="12" fill="#1a1a1a" font-weight="bold">ADMISSION</text>
+                    <text x="430" y="382" text-anchor="middle" font-size="10" fill="#9a9a9a" letter-spacing="1">先考试，再进场 — exam before deployment</text>
+                </svg>
+                <div class="figure-note">FIG.02 — Environment Affordance™ validation loop</div>
+            </div>
+
+            <div class="four-col">
+                <div class="cell">
+                    <h4>成本 ↓</h4>
+                    <p>不是所有任务都需要通用机器人。用现有硬件完成任务验证，大大降低机器人成本。</p>
+                </div>
+                <div class="cell">
+                    <h4>协同 ↑</h4>
+                    <p>异构硬件在同一考场用同一套标准验证，提高与现有硬件的协作程度。</p>
+                </div>
+                <div class="cell">
+                    <h4>门槛 ↓</h4>
+                    <p>企业不需要懂模型，只需要看得懂评分——极大降低使用门槛。</p>
+                </div>
+                <div class="cell">
+                    <h4>准入 →</h4>
+                    <p>成为不同领域机器人的准入考场：任何领域的机器，先考后进。</p>
+                </div>
+            </div>
+
+            <!-- 旗舰产品入口 · 主链接 → EA 产品页 -->
+            <a class="product-cta" href="ea0811.html">
+                <span class="mono pc-label">旗舰产品 · Flagship Product</span>
+                <h3 class="pc-title">Environment Affordance™ — 部署前的独立验证</h3>
+                <p class="pc-desc">按机器人本体参数，把真实场地重新标注成一份可为性地图，把感知容易出错的场景先跑一遍，在部署之前给出可审计、可复现的验证结论。既可单独交付，也是 microNature 全链条的核心组件。</p>
+                <span class="pc-go">查看产品页 →</span>
+            </a>
+        </div>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ 02 WHAT'S DIFFERENT ═══════════════ -->
+    <section id="s2">
+        <span class="mono section-label">02 · What's Different</span>
+        <h2 class="section-title">有何不同：领域原生的路径，机器视角的打法</h2>
+
+        <p class="lead">如上方 microNature 架构图所示，也许您会好奇，这和市面上的做法有何不同？我们先从一个类比出发：LLM 的 scaling law 的成立，得益于 30 多年的互联网数据基建；而<strong>物理智能的规模化部署，同样以客观世界的真实物理基建为先决条件</strong>——没有真实环境的数据底座，仿真与现实的鸿沟无从弥合。基于真实物理基建供给智能硬件与模型训练，才能从根本上收窄 sim2real 的鸿沟。围绕这个判断，答案分两层——<strong>技术路径不同</strong>，<strong>取舍打法也不同</strong>。</p>
+
+        <div style="margin-top:48px;">
+            <span class="mono section-label" style="color:var(--accent);">特点一 · 技术路径</span>
+            <h3 class="section-title" style="font-size:24px;">不是硬件适配仿真，而是仿真适配领域的物理真实</h3>
+
+            <p class="prose">机器最终要工作的地方，不是合成场景，是客观世界——厂房、矿区、园区、电网、仓库。这里有一个容易被通用方案忽略的事实：<strong>从机器和任务的视角出发，不同的作业环境对应不同的物理引擎。</strong>矿井巷道的低照度、粉尘与防爆约束，洁净室的洁净度与几何精度，露天矿区的非结构化路面——物理属性、感知模态、运动约束各不相同。把所有场景塞进同一套通用模板，物理就失真了。</p>
+
+            <p class="prose">microNature 的两项核心能力，正是为此而生：</p>
+
+            <div class="two-col">
+                <div>
+                    <h3>物理引擎 · 场景原生</h3>
+                    <p>针对每个领域的作业环境做物理原生建模：几何结构、物理参数、动力学行为一体化。不是先建几何再补物理，而是物理与场景一起生长。场景原生，意味着仿真的物理行为与真实部署场景对齐。</p>
+                </div>
+                <div class="divider"></div>
+                <div>
+                    <h3>全域感知 · 物理量融合</h3>
+                    <p>不同环境依赖不同的物理量采集方式：有的靠视觉，有的靠温湿度，有的靠毫米波，有的靠触觉与力控。microNature 的全域感知算法把这些异构物理量融合进同一套物理引擎中运行——物理量进，物理量出，全程不折叠。</p>
+                </div>
+            </div>
+
+            <div class="value-box">
+                <span class="mono label">Domain-Native</span>
+                <p>microNature 主打<strong>领域原生的物理场景对接所有类型的智能硬件</strong>（包括各类机器人）：不要求硬件适配仿真，而是让仿真按领域的物理真实去承接硬件。这是 microNature 与通用仿真平台的根本分野。</p>
+            </div>
+        </div>
+
+        <div style="margin-top:64px;">
+            <span class="mono section-label" style="color:var(--accent);">特点二 · 取舍打法</span>
+            <h3 class="section-title" style="font-size:24px;">从机器的视角，按产业的节奏</h3>
+
+            <div class="two-col">
+                <div>
+                    <h3>机器视角：减配才是硬道理</h3>
+                    <p>并不是所有场景都需要高配通用机器人。从机器自己的视角出发：能完成任务、鲁棒性高，比通用能力更重要。把任务、场景和自身能力对齐——一台减配的、低成本的专用机器，配合对的基建，往往胜过一台昂贵的通用机器。</p>
+                    <p style="margin-top:12px;">以厂矿场景为例：真正需要的是自动驾驶、机器狗、无人机、轮式机器人的<strong>异构协同</strong>，而不是一台具身机器人包打天下。这也是 Environment Affordance™ 从机器人视角做验证的原因——让每一台现有硬件都被正确地使用。</p>
+                </div>
+                <div class="divider"></div>
+                <div>
+                    <h3>产业节奏：发展是线性的</h3>
+                    <p>技术主张很明确：产业发展是线性的，不是跳跃的。先在现有基础上解决高结构化任务，再解决半结构化任务，最后才是通用——这个顺序不可颠倒。</p>
+                    <p style="margin-top:12px;">当下制造业与工业场景大部分亟需解决的，是<strong>结构化与半结构化之间</strong>的任务：场景变动低频，物理准确、硬件协同、成本控制是重中之重。基建应该先把这段最大的、最确定的需求承接住。</p>
+                </div>
+            </div>
+
+            <div class="svg-container">
+                <svg viewBox="0 0 860 330" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, Consolas, monospace">
+                    <defs>
+                        <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                            <line x1="0" y1="0" x2="0" y2="8" stroke="#1a1a1a" stroke-width="1"/>
+                        </pattern>
+                    </defs>
+                    <rect x="0" y="0" width="860" height="330" fill="white"/>
+                    <!-- three segments -->
+                    <rect x="60" y="80" width="235" height="74" fill="#1a1a1a"/>
+                    <text x="177" y="112" text-anchor="middle" font-size="13" fill="#ffffff" font-weight="bold">STRUCTURED</text>
+                    <text x="177" y="132" text-anchor="middle" font-size="11" fill="#c9c9c9">结构化</text>
+                    <rect x="305" y="80" width="280" height="74" fill="url(#hatch)" stroke="#1a1a1a" stroke-width="1.2"/>
+                    <text x="445" y="112" text-anchor="middle" font-size="13" fill="#1a1a1a" font-weight="bold">SEMI-STRUCTURED</text>
+                    <text x="445" y="132" text-anchor="middle" font-size="11" fill="#333333">半结构化</text>
+                    <rect x="595" y="80" width="205" height="74" fill="none" stroke="#9a9a9a" stroke-width="1" stroke-dasharray="4,4"/>
+                    <text x="697" y="112" text-anchor="middle" font-size="13" fill="#9a9a9a" font-weight="bold">UNSTRUCTURED</text>
+                    <text x="697" y="132" text-anchor="middle" font-size="11" fill="#9a9a9a">非结构化 / 通用</text>
+                    <!-- demand bracket -->
+                    <path d="M60,180 L60,192 L585,192 L585,180" fill="none" stroke="#2d4a3e" stroke-width="1.4"/>
+                    <text x="322" y="214" text-anchor="middle" font-size="12" fill="#2d4a3e" font-weight="bold" letter-spacing="1">当下产业的主要需求在这里</text>
+                    <!-- annotations -->
+                    <text x="177" y="252" text-anchor="middle" font-size="10" fill="#757575">已规模化解决</text>
+                    <text x="177" y="268" text-anchor="middle" font-size="10" fill="#757575">密度 470台/万人 · IFR 2023</text>
+                    <text x="445" y="252" text-anchor="middle" font-size="10" fill="#757575">场景低频变动 · 物理准确</text>
+                    <text x="445" y="268" text-anchor="middle" font-size="10" fill="#757575">硬件协同 · 成本控制</text>
+                    <text x="697" y="252" text-anchor="middle" font-size="10" fill="#757575">前沿研究 · 数据缺口&gt;99%</text>
+                    <text x="697" y="268" text-anchor="middle" font-size="10" fill="#757575">先不急</text>
+                    <!-- order line -->
+                    <text x="430" y="310" text-anchor="middle" font-size="11" fill="#1a1a1a" letter-spacing="1">先结构化 → 再半结构化 → 再谈通用</text>
+                </svg>
+                <div class="figure-note">FIG.03 — task spectrum &amp; where industrial demand sits today</div>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ 03 PROOF ═══════════════ -->
+    <section id="s3">
+        <span class="mono section-label">03 · Proof</span>
+        <h2 class="section-title">基于成熟技术，在应用层创新</h2>
+
+        <p class="prose">microNature 是新理念，却基于成熟技术。团队具备国内少有的、成建制的物理引擎与空间智能能力，全部经过真实产业交付的千锤百炼。</p>
+
+        <div class="svg-container">
+            <svg viewBox="0 40 1440 910" xmlns="http://www.w3.org/2000/svg" font-family="Inter, 'Noto Sans SC', 'PingFang SC', sans-serif">
+                <defs>
+                    <marker id="arrK" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M0,0 L10,5 L0,10 z" fill="#1a1a1a"/>
+                    </marker>
+                </defs>
+
+                <rect x="0" y="40" width="1440" height="910" fill="#ffffff"/>
+
+                <!-- input / output seed axis -->
+                <text x="1006" y="70" font-family="'JetBrains Mono', monospace" font-size="9" letter-spacing="1.5" fill="#9a9a9a">INPUT · 十余年产业交付</text>
+                <circle cx="1016" cy="92" r="6" fill="none" stroke="#1a1a1a" stroke-width="1.2"/>
+                <line x1="1028" y1="92" x2="1236" y2="92" stroke="#1a1a1a" stroke-width="1"/>
+                <circle cx="1248" cy="92" r="6.5" fill="#1a1a1a"/>
+                <text x="1180" y="112" font-family="'JetBrains Mono', monospace" font-size="9" letter-spacing="1.5" fill="#9a9a9a">OUTPUT · 应用层考场</text>
+                <line x1="1260" y1="92" x2="1330" y2="92" stroke="#1a1a1a" stroke-width="1" marker-end="url(#arrK)"/>
+                <text x="1344" y="96" font-size="12" fill="#9a9a9a">···</text>
+
+                <!-- LEFT: MATURE FOUNDATION cluster -->
+                <text x="300" y="228" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" letter-spacing="2.5" fill="#757575">MATURE FOUNDATION · 成熟技术</text>
+                <circle cx="300" cy="520" r="262" fill="none" stroke="#9a9a9a" stroke-width="1.2" stroke-dasharray="4,5"/>
+
+                <circle cx="215" cy="430" r="92" fill="#fdfdfd" stroke="#1a1a1a" stroke-width="1.2"/>
+                <circle cx="158" cy="372" r="12" fill="#1a1a1a"/>
+                <text x="158" y="376.5" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#ffffff">01</text>
+                <text x="215" y="418" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a1a1a">物理引擎</text>
+                <text x="215" y="438" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a1a1a">与空间底座</text>
+                <text x="215" y="460" text-anchor="middle" font-size="9.8" fill="#757575">GIS · 三维仿真十余年</text>
+                <text x="215" y="475" text-anchor="middle" font-size="9.8" fill="#757575">TB 级承载 · 国产 CPU</text>
+
+                <circle cx="385" cy="420" r="92" fill="#fdfdfd" stroke="#1a1a1a" stroke-width="1.2"/>
+                <circle cx="328" cy="362" r="12" fill="#1a1a1a"/>
+                <text x="328" y="366.5" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#ffffff">02</text>
+                <text x="385" y="408" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a1a1a">EA 算法</text>
+                <text x="385" y="428" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a1a1a">与对抗策略</text>
+                <text x="385" y="450" text-anchor="middle" font-size="9.8" fill="#757575">红蓝对抗 · 感知欺骗场景库</text>
+                <text x="385" y="465" text-anchor="middle" font-size="9.8" fill="#757575">地信算法迁移</text>
+
+                <circle cx="205" cy="600" r="92" fill="#fdfdfd" stroke="#1a1a1a" stroke-width="1.2"/>
+                <circle cx="148" cy="542" r="12" fill="#1a1a1a"/>
+                <text x="148" y="546.5" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#ffffff">03</text>
+                <text x="205" y="588" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a1a1a">感知 · 可视化</text>
+                <text x="205" y="608" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a1a1a">· 操控</text>
+                <text x="205" y="630" text-anchor="middle" font-size="9.8" fill="#757575">异构物理量融合</text>
+                <text x="205" y="645" text-anchor="middle" font-size="9.8" fill="#757575">物理量级接口 · 同栈打通</text>
+
+                <circle cx="380" cy="595" r="92" fill="#fdfdfd" stroke="#1a1a1a" stroke-width="1.2"/>
+                <circle cx="323" cy="537" r="12" fill="#1a1a1a"/>
+                <text x="323" y="541.5" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#ffffff">04</text>
+                <text x="380" y="585" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a1a1a">端侧算力储备</text>
+                <text x="380" y="612" text-anchor="middle" font-size="9.8" fill="#757575">FeFET 铁电存算一体</text>
+                <text x="380" y="627" text-anchor="middle" font-size="9.8" fill="#757575">端侧推理 · 低能耗</text>
+
+                <!-- single convergence axis -->
+                <circle cx="578" cy="520" r="5.5" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.6"/>
+                <line x1="588" y1="520" x2="772" y2="520" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+                <path d="M758,506.5 L786,520 L758,533.5" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+                <text x="676" y="478" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" letter-spacing="2" fill="#9a9a9a">PROVEN → APPLIED</text>
+                <text x="676" y="498" text-anchor="middle" font-size="11.5" fill="#555555">千锤百炼 · 在应用层转化</text>
+
+                <!-- RIGHT: APPLICATION INNOVATION -->
+                <text x="1090" y="228" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" letter-spacing="2.5" fill="#757575">APPLICATION INNOVATION · 应用层</text>
+                <ellipse cx="1090" cy="520" rx="292" ry="242" fill="none" stroke="#9a9a9a" stroke-width="1.2" stroke-dasharray="4,5"/>
+
+                <line x1="874" y1="414" x2="988" y2="482" stroke="#1a1a1a" stroke-width="0.9"/>
+                <circle cx="846" cy="398" r="40" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.2"/>
+                <text x="846" y="403" text-anchor="middle" font-size="12" font-weight="600" fill="#1a1a1a">预对齐</text>
+
+                <line x1="1302" y1="414" x2="1194" y2="482" stroke="#1a1a1a" stroke-width="0.9"/>
+                <circle cx="1330" cy="398" r="40" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.2"/>
+                <text x="1330" y="403" text-anchor="middle" font-size="12" font-weight="600" fill="#1a1a1a">预演练</text>
+
+                <line x1="1090" y1="636" x2="1090" y2="712" stroke="#1a1a1a" stroke-width="0.9"/>
+                <circle cx="1090" cy="724" r="40" fill="#ffffff" stroke="#1a1a1a" stroke-width="1.2"/>
+                <text x="1090" y="729" text-anchor="middle" font-size="12" font-weight="600" fill="#1a1a1a">准入 →</text>
+
+                <circle cx="1090" cy="520" r="116" fill="#1a1a1a"/>
+                <text x="1090" y="500" text-anchor="middle" font-size="21" font-weight="700" fill="#ffffff">Environment</text>
+                <text x="1090" y="528" text-anchor="middle" font-size="21" font-weight="700" fill="#ffffff">Affordance™</text>
+                <line x1="1032" y1="548" x2="1148" y2="548" stroke="#555555" stroke-width="1"/>
+                <text x="1090" y="570" text-anchor="middle" font-size="12" fill="#e5e5e5">应用层创新 · 数字考场</text>
+                <text x="1090" y="590" text-anchor="middle" font-size="9.5" fill="#9a9a9a">新理念 · 可为性标注 · 对抗验证 · 评分</text>
+
+                <!-- BOTTOM: four text blocks -->
+                <line x1="64" y1="842" x2="1376" y2="842" stroke="#e0e0e0" stroke-width="1"/>
+
+                <g font-size="11" fill="#444444">
+                    <text x="64" y="872" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" letter-spacing="1" fill="#1a1a1a">CAP-1 · 空间底座</text>
+                    <text x="64" y="894">多源数据融合大场景建库（倾斜摄影 · 点云 · BIM）</text>
+                    <text x="64" y="911">TB 级三维快速承载 · 国产 CPU 全架构兼容</text>
+                    <text x="64" y="931" font-size="10" font-style="italic" fill="#9a9a9a">特种工业场景十余年交付记录</text>
+                </g>
+
+                <g font-size="11" fill="#444444">
+                    <text x="398" y="872" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" letter-spacing="1" fill="#1a1a1a">CAP-2 · 对抗策略</text>
+                    <text x="398" y="894">可为性标注 · 感知欺骗场景库 · 红蓝对抗裁评</text>
+                    <text x="398" y="911">地信算法迁移为机器感知边界验证工具</text>
+                    <text x="398" y="931" font-size="10" font-style="italic" fill="#9a9a9a">红蓝对抗 · 千锤百炼</text>
+                </g>
+
+                <g font-size="11" fill="#444444">
+                    <text x="732" y="872" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" letter-spacing="1" fill="#1a1a1a">CAP-3 · 三层同栈</text>
+                    <text x="732" y="894">全域感知融合 · 大规模三维可视化</text>
+                    <text x="732" y="911">物理量级操控接口 · 三层均为顶级配置</text>
+                    <text x="732" y="931" font-size="10" font-style="italic" fill="#9a9a9a">perception · visualization · manipulation</text>
+                </g>
+
+                <g font-size="11" fill="#444444">
+                    <text x="1066" y="872" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" letter-spacing="1" fill="#1a1a1a">CAP-4 · 端侧算力</text>
+                    <text x="1066" y="894">FeFET 铁电存算一体芯片研究</text>
+                    <text x="1066" y="911">实时性与能耗 · 硬件底层路径</text>
+                    <text x="1066" y="931" font-size="10" font-style="italic" fill="#9a9a9a">compute-in-memory · edge inference</text>
+                </g>
+            </svg>
+            <div class="figure-note">FIG.04 — mature foundation → application innovation</div>
+        </div>
+
+        <div class="value-box" style="margin-top:52px;">
+            <span class="mono label">问题佐证 · 两个硬数字</span>
+            <p>而问题本身有多真实，两个数字足以说明：<strong>前沿实验室 demo 与真实部署之间的 gap 不但没有收窄，反而在扩大</strong>；与此同时，<strong>高质量具身数据缺口超过 99%</strong>——物理智能没有 LLM 当年赖以爆发的现成数据基建。这正是这一层 infra 必须存在的原因，也是这套解法对症的地方。更完整的支撑论证（token 与算力效率、四条数据路径拆解、遥操作成本对比）留待尽调阶段，见<a class="xlink-soft" href="mn0811-attachment.html">文末思考 · 能力与部署的悖论</a>。</p>
+        </div>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ 04 NOW & NEXT ═══════════════ -->
+    <section id="s4">
+        <span class="mono section-label">04 · Now &amp; Next</span>
+        <h2 class="section-title">现在收窄 gap，将来供给直觉</h2>
+
+        <div class="two-col">
+            <div>
+                <h3>NOW · 收窄 gap 的 infra</h3>
+                <p>microNature 现在做的，是从根本上收窄 demo 与部署之间 gap 的基础设施。gap 的根源是真实物理基建的缺失——我们不追更大的模型，我们补上缺失的那一层。在此过程中构建 moat：场景数据的飞轮、验证标准的权威、领域专家的深度。</p>
+            </div>
+            <div class="divider"></div>
+            <div>
+                <h3>NEXT · 供给直觉</h3>
+                <p>未来所做的是提供领域与任务所必需的直觉给机器，从供给端提供 physical intelligence。机器进入一个陌生的真实场景，不再需要从零认识世界——直觉已经由 infra 预先供给。</p>
+            </div>
+        </div>
+
+        <div class="hard-card" style="margin-top:40px;">
+            <span class="mono" style="display:block; margin-bottom:16px; color:var(--accent);">Platform Vision</span>
+            <p class="prose" style="margin-bottom:16px;">microNature 的终局形态，是一个可以 <strong>dock 所有 robotic agent 的平台</strong>——一个任务环境本体（task-environment ontology）：</p>
+            <p class="prose" style="margin-bottom:0;">平台自动 assign task，让 robots 自适应；不同的 sensing stack 与 policy stack 皆可 plug in；平台向每一个 agent 提供必要的<strong>直觉 + 任务 + 评分</strong>，最大程度自主化对接。接入的机器人清楚地知道自己<strong>所为与不能为</strong>——这是物理直觉供给的完整形态。</p>
+        </div>
+
+        <div class="value-box">
+            <span class="mono label">为什么是必经之路</span>
+            <p>产业不会跳过基建直接抵达通用。谁先把真实物理世界的训练、验证、部署基建做扎实，谁就定义了下一阶段的准入标准。<strong>Infra 不是选项，是必经之路。</strong></p>
+        </div>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ 05 TEAM ═══════════════ -->
+    <section id="s5">
+        <span class="mono section-label">05 · Team</span>
+        <h2 class="section-title">团队</h2>
+
+        <div class="team-grid">
+            <div class="team-member">
+                <h4>吕鹏辉</h4>
+                <span class="role">联合创始人</span>
+                <p>先后涉足北方华创、NBA 中国、农业科技、城市更新，现在和团队一起做物理智能基础设施，给机器装上物理直觉。</p>
+            </div>
+            <div class="team-member">
+                <h4>Manda</h4>
+                <span class="role">联合创始人</span>
+                <p>跨越战略咨询（工业制造业数字化转型、消费品 AIoT）、国家地理、认知神经学与非侵入式脑机等多个领域；从设计哲学出发，提出"环境可为"的概念和工程化方法，让环境对机器而言可理解、可行动。</p>
+            </div>
+            <div class="team-member">
+                <h4>王毅</h4>
+                <span class="role">技术专家</span>
+                <p>GIS 空间地信与特种工业环境仿真的一线经验超过十年；曾主导"十四五"国家重点研发计划项目，对特种场景的交付节奏和技术债务有完整判断。团队的技术定海神针。</p>
+            </div>
+            <div class="team-member">
+                <h4>玉虓</h4>
+                <span class="role">科学家</span>
+                <span class="cred">清华大学硕士 · 东京大学博士</span>
+                <p>现西安电子科技大学教授，前之江实验室智能芯片与器件研究中心副主任。玉虓在集成电路与智能芯片领域拥有世界级的研究积累——博士期间在东京大学成功制备全球最薄锗基晶体管，成果发表于芯片器件领域顶级会议 IEDM，并获当年最佳学生论文奖；在西安电子科技大学及之江实验室主导存算一体及铁电芯片研发。</p>
+                <p>microNature 在规模化部署中，将持续逼近算力与感知硬件的物理极限。玉虓为 microNature 的技术方向提供专业判断，其在存算一体与前沿感知芯片领域的积累，为公司的硬件路线提供了重要参照。</p>
+            </div>
+            <div class="team-member full-width">
+                <h4>闫付龙</h4>
+                <span class="role">顾问</span>
+                <p>北京邮电大学副教授，近十年专注光交换网络领域研究。矿山、能源等私有化部署场景对数据吞吐和内部网络带宽的要求正快速逼近传统电交换的极限，他的研究为平台未来在云边协同方向的演进提供技术参照。</p>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ SOURCES ═══════════════ -->
+    <section id="sources">
+        <span class="mono section-label">数据来源 · Sources</span>
+        <ul class="sources" style="margin-top:20px;">
+            <li>IFR《World Robotics》：中国制造业机器人密度 470 台/万名员工（2023），全球第三；全球平均 162 台；2023 年中国新增安装 27.6 万台，约占全球 51%。</li>
+            <li>Gartner 及行业估算：人形机器人高质量数据缺口达万倍量级；遥操作数据成本约 2,000 元/小时。</li>
+            <li>盖世汽车研究院：具身高质量数据存量约 50 万小时，通用能力需求约 1,000 万小时，缺口超 99%；物理 AI 数据量约为 LLM 语料的 1/20,000；仿真可将单条数据成本降至 1/20–1/200。</li>
+            <li>弗若斯特沙利文：中国具身智能解决方案市场规模 2030 年预计约 1,426 亿元。</li>
+            <li><a class="xlink-soft" href="mn0811-attachment.html">思考 · 能力与部署的悖论（尽调材料）</a>：token 与算力消耗高而能力不线性增长；数据总量天量但数据效率极低（小时级视频的有效物理知识可能不及千词文本）；遥操作、ego 视角、合成数据、视频学习四条主流数据路径的物理保真度均不足；叠加之下，机器人的 scaling law 至今未出现。</li>
+            <li><a class="xlink-soft" href="mn0811-attachment.html#a5">思考 · 数据成本对比</a>：遥操作数据成本约 2,000 元/小时（Gartner），仿真可将单条数据成本降至 1/20–1/200；物理语料约为 LLM 语料的 1/20,000。</li>
+        </ul>
+    </section>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer>
+        <div class="footer-brand">microNature — <span style="font-size:15px; font-style:italic;">Physical Intelligence Infrastructure</span></div>
+        <div class="footer-right">
+            <div class="mono" style="color: var(--ink); margin-bottom: 5px;">move fast and fix things · © 2026</div>
+            为机器提供直觉 · 为产业提供考场
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>
