@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思考 · 能力与部署的悖论 — microNature 尽调材料</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;600&family=Noto+Serif+SC:wght@400;600&display=swap');
+
+        :root {
+            --paper: #fdfcfb;
+            --ink: #1a1a1a;
+            --accent: #2d4a3e;
+            --line: #e0e0e0;
+            --gray-light: #e0e0e0;
+            --gray-mid: #757575;
+            --gray-soft: #9a9a9a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            color: var(--ink);
+            line-height: 1.8;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page {
+            background-color: var(--paper);
+            width: 100%;
+            max-width: 1100px;
+            padding: 100px 80px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'EB Garamond', 'Noto Serif SC', serif;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gray-mid);
+        }
+
+        /* ── HEADER ───────────────────────────── */
+        header { text-align: center; margin-bottom: 80px; }
+
+        header .kicker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gray-mid);
+            margin-bottom: 26px;
+        }
+
+        header h1 {
+            font-size: 46px;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+
+        header .subtitle {
+            font-size: 18px;
+            font-weight: 300;
+            color: var(--gray-mid);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        header .thesis {
+            margin: 34px auto 0;
+            max-width: 640px;
+            background-color: rgba(45, 74, 62, 0.03);
+            border: 1px solid rgba(45, 74, 62, 0.1);
+            padding: 28px 36px;
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 1.9;
+            text-align: left;
+        }
+
+        header .thesis > * + * { margin-top: 14px; }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--gray-light);
+            margin: 60px 0;
+        }
+
+        /* ── PROSE ────────────────────────────── */
+        .prose {
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 1.9;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .prose strong { font-weight: 600; color: var(--ink); }
+        .prose u { text-decoration: underline; text-underline-offset: 3px; }
+
+        .lead {
+            font-size: 17px;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 28px;
+        }
+
+        .section-label { margin-bottom: 12px; display: block; }
+
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 28px;
+            line-height: 1.3;
+        }
+
+        .sub-title {
+            font-size: 22px;
+            margin-bottom: 22px;
+            line-height: 1.35;
+        }
+
+        /* ── TOC ──────────────────────────────── */
+        .toc-nav ol {
+            list-style: none;
+            margin: 22px 0 0;
+            padding: 0;
+            columns: 2;
+            column-gap: 54px;
+        }
+
+        .toc-nav li { break-inside: avoid; border-bottom: 1px solid var(--gray-light); }
+
+        .toc-nav a {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            padding: 11px 0;
+            text-decoration: none;
+            color: var(--ink);
+        }
+
+        .toc-nav a:hover .toc-num,
+        .toc-nav a:hover .toc-title-sm { color: var(--accent); }
+        .toc-nav a:hover .toc-title-sm { text-decoration: underline; text-underline-offset: 3px; }
+
+        .toc-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--gray-soft);
+            flex-shrink: 0;
+        }
+
+        .toc-title-sm {
+            font-family: 'EB Garamond', 'Noto Serif SC', serif;
+            font-size: 14px;
+            color: var(--ink);
+        }
+
+        /* ── SVG ──────────────────────────────── */
+        .svg-container { margin: 40px 0; text-align: center; }
+        .svg-container svg { max-width: 100%; height: auto; }
+
+        .figure-note {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gray-soft);
+            margin-top: 12px;
+        }
+
+        /* ── VALUE BOX ────────────────────────── */
+        .value-box {
+            background-color: rgba(45, 74, 62, 0.03);
+            border: 1px solid rgba(45, 74, 62, 0.1);
+            padding: 40px 50px;
+            margin: 44px 0;
+        }
+
+        .value-box .label {
+            color: var(--accent);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .value-box p { font-size: 15px; font-weight: 300; line-height: 1.9; }
+
+        /* ── GRIDS ────────────────────────────── */
+        .four-col {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+            margin: 40px 0;
+        }
+
+        .four-col .cell {
+            border: 1px solid var(--line);
+            background: #fff;
+            padding: 22px 20px;
+        }
+
+        .four-col .cell h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink);
+            margin-bottom: 10px;
+        }
+
+        .four-col .cell p { font-size: 12.5px; font-weight: 300; color: #555; line-height: 1.7; }
+
+        /* ── TABLE ────────────────────────────── */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 36px 0;
+            font-size: 13px;
+        }
+
+        .comparison-table th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-mid);
+            font-weight: 400;
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .comparison-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 300;
+            vertical-align: top;
+            line-height: 1.6;
+        }
+
+        .comparison-table td:first-child {
+            font-weight: 600;
+            font-size: 12.5px;
+            color: var(--ink);
+            white-space: nowrap;
+        }
+
+        .comparison-table td:last-child { color: var(--accent); }
+
+        /* ── SOURCES ──────────────────────────── */
+        .sources li {
+            font-size: 12px;
+            font-weight: 300;
+            color: var(--gray-mid);
+            line-height: 1.8;
+            margin-bottom: 8px;
+            list-style: none;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .sources li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: var(--gray-soft);
+        }
+
+        /* ── TOPBAR ──────────────────────────── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            background-color: rgba(253, 252, 251, 0.94);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .topbar-in {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 4px 24px;
+        }
+
+        .tb-brand {
+            font-family: 'EB Garamond', 'Noto Serif SC', serif;
+            font-size: 16px;
+            color: var(--ink);
+            text-decoration: none;
+            padding: 12px 0;
+        }
+
+        .tb-brand em { font-style: italic; color: var(--accent); }
+        a.tb-brand:hover em { text-decoration: underline; text-underline-offset: 3px; }
+        span.tb-brand { cursor: default; }
+
+        .topnav { display: flex; gap: 22px; flex-wrap: wrap; }
+
+        .topnav a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.1em;
+            color: var(--gray-mid);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            padding: 16px 0;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .topnav a:hover { color: var(--ink); border-color: var(--gray-light); }
+
+        .topnav .cur {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(45, 74, 62, 0.4);
+        }
+
+        /* ── CROSS-LINKS ─────────────────────── */
+        a.xlink {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(45, 74, 62, 0.35);
+        }
+
+        a.xlink:hover { border-bottom-color: var(--accent); }
+
+        a.back-link {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.15em;
+            color: var(--gray-mid);
+            text-decoration: none;
+            border-bottom: 1px solid var(--gray-light);
+            padding-bottom: 3px;
+            margin-bottom: 24px;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        a.back-link:hover { color: var(--accent); border-color: var(--accent); }
+
+        a.footer-brand-link { color: inherit; text-decoration: none; transition: color 0.15s; }
+        a.footer-brand-link:hover { color: var(--accent); }
+
+        /* ── FOOTER ───────────────────────────── */
+        footer {
+            border-top: 1px solid var(--ink);
+            padding-top: 28px;
+            margin-top: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+        }
+
+        .footer-brand { font-family: 'EB Garamond', 'Noto Serif SC', serif; font-size: 22px; }
+        .footer-right { text-align: right; font-size: 12px; color: var(--gray-mid); }
+
+        /* ── RESPONSIVE ───────────────────────── */
+        @media (max-width: 768px) {
+            .topbar { position: static; }
+            .topbar-in { padding: 10px 16px; }
+            .topnav a, .topnav .cur { padding: 8px 0; }
+            body { padding: 12px 6px; }
+            .page { padding: 46px 22px; }
+            header h1 { font-size: 30px; }
+            .section-title { font-size: 23px; }
+            .sub-title { font-size: 19px; }
+            .four-col { grid-template-columns: 1fr 1fr; }
+            .toc-nav ol { columns: 1; }
+            footer { flex-direction: column; align-items: flex-start; }
+            .footer-right { text-align: left; }
+        }
+
+        @media (max-width: 440px) {
+            .four-col { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="topbar" aria-label="站点导航">
+    <div class="topbar-in">
+        <a class="tb-brand" href="mn0811.html" title="返回主文件">microNature <em>· 思考</em></a>
+        <div class="topnav">
+            <a href="mn0811.html">microNature</a>
+            <a href="ea0811.html">Environment Affordance™</a>
+            <a href="ea0811-demo.html">产品示例</a>
+            <span class="cur" aria-current="page">思考</span>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+
+    <!-- ═══════════════ HEADER ═══════════════ -->
+    <header>
+        <a class="back-link" href="mn0811.html">← 返回主文件 · microNature — 物理智能基础设施</a>
+        <div class="kicker">Insights</div>
+        <h1>能力与部署的悖论</h1>
+        <p class="subtitle">产品越来越惊艳，真实部署却似乎越来越困难，这是为什么呢？换句话说，技术与能力之间的差距不会随着模型能力升级而自动消失吗？</p>
+        <div class="thesis">
+            <p><strong>TL;DR：技术与能力的鸿沟是结构性的，根源在供给侧</strong>——硬件在高速迭代，大脑基座模型在进步但没跟上，而真正的瓶颈在第三层：场景数据与领域原生物理建模几乎未被供给。</p>
+            <p>我们从算力、数据和路径三个维度展开，发现物理智能的基建是必经之路，以及 microNature 的成立与设计初衷。</p>
+        </div>
+    </header>
+
+    <!-- ═══════════════ TOC ═══════════════ -->
+    <section id="toc">
+        <span class="mono section-label">目录 · Contents</span>
+        <nav class="toc-nav">
+            <ol>
+                <li><a href="#a1"><span class="toc-num">A1</span><span class="toc-title-sm">现象：三条不同步的曲线</span></a></li>
+                <li><a href="#a2"><span class="toc-num">A2</span><span class="toc-title-sm">成因一：token 与算力效率</span></a></li>
+                <li><a href="#a3"><span class="toc-num">A3</span><span class="toc-title-sm">成因二：数据总量天量，效率极低</span></a></li>
+                <li><a href="#a4"><span class="toc-num">A4</span><span class="toc-title-sm">成因三：四条数据路径的物理保真度</span></a></li>
+                <li><a href="#a5"><span class="toc-num">A5</span><span class="toc-title-sm">遥操作成本对比</span></a></li>
+                <li><a href="#a6"><span class="toc-num">A6</span><span class="toc-title-sm">叠加结论：Scaling Law 未出现</span></a></li>
+            </ol>
+        </nav>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ A1 现象 ═══════════════ -->
+    <section id="a1">
+        <span class="mono section-label">A1 · The Phenomenon</span>
+        <h2 class="section-title">现象：三条不同步的曲线</h2>
+
+        <p class="lead">前沿实验室的 demo 越来越惊艳，真实场地的部署成功率却没有同步上升。这个 gap 没有收窄，反而在扩大。</p>
+
+        <div class="svg-container">
+            <svg viewBox="0 0 800 430" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, Consolas, monospace">
+                <rect x="0" y="0" width="800" height="430" fill="white"/>
+                <!-- axes -->
+                <line x1="70" y1="360" x2="760" y2="360" stroke="#1a1a1a" stroke-width="1"/>
+                <line x1="70" y1="360" x2="70" y2="45" stroke="#1a1a1a" stroke-width="1"/>
+                <text x="736" y="380" font-size="10" fill="#757575">TIME →</text>
+                <text x="30" y="55" font-size="10" fill="#757575" transform="rotate(-90,30,90)">CAPABILITY</text>
+                <!-- gap fill -->
+                <path d="M70,350 C250,332 450,240 750,72 L750,296 C520,326 300,344 70,352 Z" fill="rgba(26,26,26,0.06)"/>
+                <!-- demo curve -->
+                <path d="M70,350 C250,332 450,240 750,72" fill="none" stroke="#1a1a1a" stroke-width="1.6"/>
+                <!-- deploy curve -->
+                <path d="M70,352 C300,344 520,326 750,296" fill="none" stroke="#1a1a1a" stroke-width="1.2" stroke-dasharray="5,4"/>
+                <!-- labels -->
+                <text x="520" y="140" font-size="12" fill="#1a1a1a" font-weight="bold">LAB DEMO 能力</text>
+                <text x="520" y="318" font-size="12" fill="#1a1a1a">FIELD DEPLOY 能力</text>
+                <text x="430" y="222" font-size="13" fill="#2d4a3e" font-weight="bold" letter-spacing="2">THE GAP</text>
+                <text x="408" y="240" font-size="10" fill="#757575">数据↑ · token↑ · 部署≈</text>
+                <!-- today marker -->
+                <line x1="640" y1="60" x2="640" y2="360" stroke="#9a9a9a" stroke-width="0.8" stroke-dasharray="2,4"/>
+                <text x="648" y="70" font-size="9" fill="#9a9a9a">TODAY</text>
+            </svg>
+            <div class="figure-note">FIG.A1 — demo capability vs deployment capability · gap 在扩大</div>
+        </div>
+
+        <p class="prose">把同一条时间轴拆成三层看，问题出在哪一层，一目了然：</p>
+
+        <div class="svg-container">
+            <svg viewBox="0 0 820 430" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, Consolas, monospace">
+                <rect x="0" y="0" width="820" height="430" fill="white"/>
+                <!-- axes -->
+                <line x1="70" y1="360" x2="775" y2="360" stroke="#1a1a1a" stroke-width="1"/>
+                <line x1="70" y1="360" x2="70" y2="45" stroke="#1a1a1a" stroke-width="1"/>
+                <text x="742" y="380" font-size="10" fill="#757575">TIME →</text>
+                <text x="30" y="55" font-size="10" fill="#757575" transform="rotate(-90,30,90)">READY 程度</text>
+                <!-- hardware curve: fast -->
+                <path d="M70,330 C280,290 480,190 750,80" fill="none" stroke="#1a1a1a" stroke-width="1.8"/>
+                <text x="600" y="70" font-size="12" fill="#1a1a1a" font-weight="bold">硬件产能与表现</text>
+                <text x="600" y="88" font-size="9.5" fill="#757575">季度级迭代 · 密度 470台/万人</text>
+                <!-- model curve: medium -->
+                <path d="M70,340 C300,326 500,290 750,225" fill="none" stroke="#1a1a1a" stroke-width="1.3" stroke-dasharray="6,4"/>
+                <text x="612" y="215" font-size="12" fill="#1a1a1a">大脑 · 基座模型</text>
+                <text x="612" y="233" font-size="9.5" fill="#757575">在进步 · 但没跟上硬件</text>
+                <!-- scene infra curve: flat -->
+                <path d="M70,348 C300,346 520,342 750,334" fill="none" stroke="#1a1a1a" stroke-width="1.1" stroke-dasharray="2,4"/>
+                <text x="540" y="356" font-size="12" fill="#1a1a1a">场景数据 · 领域原生物理建模</text>
+                <text x="540" y="374" font-size="9.5" fill="#757575">接近于零 · 几乎未被供给</text>
+                <!-- gap bracket -->
+                <path d="M762,80 L772,80 L772,334 L762,334" fill="none" stroke="#9a9a9a" stroke-width="1"/>
+                <text x="780" y="200" font-size="10" fill="#2d4a3e" font-weight="bold" transform="rotate(90,780,200)">真正的瓶颈在这里</text>
+            </svg>
+            <div class="figure-note">FIG.A2 — 三层供给的不同步：硬件快 · 模型中 · 场景基建近乎缺席</div>
+        </div>
+
+        <p class="prose">硬件一端完全没有问题：<strong>中国制造业机器人密度 470 台/万名员工，全球第三；2023 年新增安装 27.6 万台，约占全球 51%</strong>（IFR）。产能、成本、可靠性都在按季度进步。慢的是大脑——而大脑慢的根源，不是参数规模不够，而是<strong>场景数据与领域原生的物理建模严重不足</strong>：机器最终要工作的真实世界，还没有被数字化、被物理准确地供给给模型。以下三节逐一拆解。</p>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ A2 token 与算力 ═══════════════ -->
+    <section id="a2">
+        <span class="mono section-label">A2 · Token &amp; Compute Efficiency</span>
+        <h2 class="section-title">成因一：token 与算力消耗高，能力不线性增长</h2>
+
+        <p class="prose">通用机器人主流路线走的是「像素 → 语义 → 推断 → 动作」：把连续的物理世界折叠成离散 token，再由大模型推断动作。这条路线的代价是——单任务的 token 与算力消耗极高，而<strong>部署能力并没有随消耗线性增长</strong>。</p>
+
+        <div class="svg-container">
+            <svg viewBox="0 0 820 400" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, Consolas, monospace">
+                <rect x="0" y="0" width="820" height="400" fill="white"/>
+                <!-- axes -->
+                <line x1="80" y1="330" x2="775" y2="330" stroke="#1a1a1a" stroke-width="1"/>
+                <line x1="80" y1="330" x2="80" y2="40" stroke="#1a1a1a" stroke-width="1"/>
+                <text x="690" y="350" font-size="10" fill="#757575">TOKEN / 算力投入 →</text>
+                <text x="34" y="50" font-size="10" fill="#757575" transform="rotate(-90,34,88)">部署能力</text>
+                <!-- input bars (log steps) -->
+                <rect x="140" y="270" width="56" height="60" fill="rgba(26,26,26,0.14)"/>
+                <text x="168" y="348" font-size="9.5" fill="#757575" text-anchor="middle">1×</text>
+                <rect x="290" y="222" width="56" height="108" fill="rgba(26,26,26,0.14)"/>
+                <text x="318" y="348" font-size="9.5" fill="#757575" text-anchor="middle">10×</text>
+                <rect x="440" y="150" width="56" height="180" fill="rgba(26,26,26,0.14)"/>
+                <text x="468" y="348" font-size="9.5" fill="#757575" text-anchor="middle">100×</text>
+                <rect x="590" y="70" width="56" height="260" fill="rgba(26,26,26,0.14)"/>
+                <text x="618" y="348" font-size="9.5" fill="#757575" text-anchor="middle">1000×</text>
+                <text x="395" y="374" font-size="10" fill="#9a9a9a" text-anchor="middle">灰柱 = 投入规模（示意）</text>
+                <!-- capability curve: saturating -->
+                <path d="M120,300 C260,282 420,266 640,252" fill="none" stroke="#1a1a1a" stroke-width="1.8"/>
+                <circle cx="168" cy="296" r="3.5" fill="#1a1a1a"/>
+                <circle cx="318" cy="284" r="3.5" fill="#1a1a1a"/>
+                <circle cx="468" cy="270" r="3.5" fill="#1a1a1a"/>
+                <circle cx="618" cy="256" r="3.5" fill="#1a1a1a"/>
+                <text x="440" y="236" font-size="12" fill="#1a1a1a" font-weight="bold">能力增长 ≈ 线性趋缓</text>
+                <!-- divergence annotation -->
+                <line x1="618" y1="70" x2="618" y2="248" stroke="#9a9a9a" stroke-width="0.8" stroke-dasharray="2,4"/>
+                <text x="640" y="160" font-size="10.5" fill="#555">投入 ↑1000×</text>
+                <text x="640" y="176" font-size="10.5" fill="#555">能力 ↑有限</text>
+            </svg>
+            <div class="figure-note">FIG.A3 — 投入按数量级增长 · 部署能力趋缓 · 二者不线性挂钩</div>
+        </div>
+
+        <p class="prose">含义很直接：<strong>「更大的模型 + 更多的 token」不会自动兑换成部署能力。</strong>被折叠掉的，恰恰是物理世界中最关键的信息——接触、力、摩擦、形变、材质。token 花在了重建语义上，而不是重建物理上。</p>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ A3 数据效率 ═══════════════ -->
+    <section id="a3">
+        <span class="mono section-label">A3 · Data Efficiency</span>
+        <h2 class="section-title">成因二：数据总量天量，数据效率极低</h2>
+
+        <p class="prose">常有人以「视频数据是天量的」来论证物理智能不缺数据。这是一个口径错误：<strong>小时级视频蕴含的有效物理知识，可能不及千词文本。</strong>视频里是像素相关性，不是可执行的物理量——没有力、没有接触约束、没有与动作的因果对齐。数据总量天量，数据效率极低。</p>
+
+        <p class="prose">把口径对齐到「可用于训练的高质量具身数据」，缺口是这样的：</p>
+
+        <div class="svg-container">
+            <svg viewBox="0 0 820 420" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, Consolas, monospace">
+                <rect x="0" y="0" width="820" height="420" fill="white"/>
+                <!-- axis -->
+                <line x1="80" y1="340" x2="775" y2="340" stroke="#1a1a1a" stroke-width="1"/>
+                <!-- bar 1: 存量 50万小时 (linear scale: 1000万 = 260px → 50万 = 13px) -->
+                <rect x="190" y="327" width="90" height="13" fill="#1a1a1a"/>
+                <text x="235" y="316" font-size="12" fill="#1a1a1a" font-weight="bold" text-anchor="middle">≈ 50 万小时</text>
+                <text x="235" y="362" font-size="10" fill="#757575" text-anchor="middle">高质量具身数据存量</text>
+                <text x="235" y="378" font-size="9.5" fill="#9a9a9a" text-anchor="middle">行业估算</text>
+                <!-- bar 2: 需求 1000万小时 -->
+                <rect x="480" y="80" width="90" height="260" fill="none" stroke="#1a1a1a" stroke-width="1.4" stroke-dasharray="5,4"/>
+                <text x="525" y="66" font-size="12" fill="#1a1a1a" font-weight="bold" text-anchor="middle">≈ 1,000 万小时</text>
+                <text x="525" y="362" font-size="10" fill="#757575" text-anchor="middle">通用能力所需数据</text>
+                <text x="525" y="378" font-size="9.5" fill="#9a9a9a" text-anchor="middle">行业估算</text>
+                <!-- gap annotation -->
+                <line x1="300" y1="180" x2="460" y2="180" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="3,3"/>
+                <text x="380" y="166" font-size="13" fill="#2d4a3e" font-weight="bold" text-anchor="middle">缺口 &gt; 99%</text>
+                <text x="380" y="200" font-size="10" fill="#757575" text-anchor="middle">相差约 20 倍</text>
+                <!-- bottom note -->
+                <text x="427" y="406" font-size="10.5" fill="#555" text-anchor="middle">对照：物理语料总量 ≈ LLM 语料的 1/20,000 —— 物理智能没有 LLM 当年赖以爆发的现成数据基建</text>
+            </svg>
+            <div class="figure-note">FIG.A4 — 高质量具身数据：存量 vs 需求 · 缺口超 99%</div>
+        </div>
+
+        <p class="prose">对比一下 LLM 的起点：互联网用三十年沉淀了一份现成的、高质量文本基建，任何团队都可以拿它 bootstrap 一个大模型。<strong>物理智能没有这份现成的东西。</strong>就像没有互联网就没有 Transformer——没有真实物理数据基建，就没有物理智能的规模化。</p>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ A4 四条数据路径 ═══════════════ -->
+    <section id="a4">
+        <span class="mono section-label">A4 · Four Data Paths</span>
+        <h2 class="section-title">成因三：四条主流数据路径，物理保真度均不足</h2>
+
+        <p class="prose">目前行业获取具身数据的路径主要有四条。逐条拆开看，每一条都在物理保真度上有硬伤：</p>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>路径</th>
+                    <th>做法</th>
+                    <th>物理保真度问题</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>遥操作</td>
+                    <td>人类远程操控真机，采集动作轨迹</td>
+                    <td>物理真实但采集效率极低、成本极高；力、热、接触等物理量难以同步完整记录</td>
+                </tr>
+                <tr>
+                    <td>Ego 视角</td>
+                    <td>第一人称视角采集（头戴/机载相机）</td>
+                    <td>缺全局几何与环境参数；视角遮挡严重，物理状态大量不可观测</td>
+                </tr>
+                <tr>
+                    <td>合成数据</td>
+                    <td>通用仿真引擎批量生成</td>
+                    <td>模板化场景，物理参数与真实部署场景不对齐——sim2real gap 的主要来源</td>
+                </tr>
+                <tr>
+                    <td>视频学习</td>
+                    <td>从人类/网络视频中学习行为先验</td>
+                    <td>无动作标签、无物理量，只有像素相关性；学到的是「看起来像」，不是「物理上可行」</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="svg-container">
+            <svg viewBox="0 0 820 360" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, Consolas, monospace">
+                <rect x="0" y="0" width="820" height="360" fill="white"/>
+                <!-- axis -->
+                <line x1="80" y1="290" x2="775" y2="290" stroke="#1a1a1a" stroke-width="1"/>
+                <text x="34" y="50" font-size="10" fill="#757575" transform="rotate(-90,34,88)">物理保真度</text>
+                <!-- threshold line -->
+                <line x1="80" y1="96" x2="775" y2="96" stroke="#1a1a1a" stroke-width="1.2" stroke-dasharray="6,4"/>
+                <text x="768" y="86" font-size="10.5" fill="#1a1a1a" font-weight="bold" text-anchor="end">部署所需的保真度门槛</text>
+                <!-- bars (relative, qualitative) -->
+                <rect x="150" y="150" width="90" height="140" fill="rgba(26,26,26,0.16)" stroke="#1a1a1a" stroke-width="1"/>
+                <text x="195" y="312" font-size="11" fill="#1a1a1a" font-weight="bold" text-anchor="middle">遥操作</text>
+                <text x="195" y="330" font-size="9.5" fill="#757575" text-anchor="middle">真实但贵 · 量上不去</text>
+                <rect x="320" y="196" width="90" height="94" fill="rgba(26,26,26,0.16)" stroke="#1a1a1a" stroke-width="1"/>
+                <text x="365" y="312" font-size="11" fill="#1a1a1a" font-weight="bold" text-anchor="middle">Ego 视角</text>
+                <text x="365" y="330" font-size="9.5" fill="#757575" text-anchor="middle">物理状态不可观测</text>
+                <rect x="490" y="172" width="90" height="118" fill="rgba(26,26,26,0.16)" stroke="#1a1a1a" stroke-width="1"/>
+                <text x="535" y="312" font-size="11" fill="#1a1a1a" font-weight="bold" text-anchor="middle">合成数据</text>
+                <text x="535" y="330" font-size="9.5" fill="#757575" text-anchor="middle">物理与实景不对齐</text>
+                <rect x="660" y="230" width="90" height="60" fill="rgba(26,26,26,0.16)" stroke="#1a1a1a" stroke-width="1"/>
+                <text x="705" y="312" font-size="11" fill="#1a1a1a" font-weight="bold" text-anchor="middle">视频学习</text>
+                <text x="705" y="330" font-size="9.5" fill="#757575" text-anchor="middle">只有像素相关性</text>
+            </svg>
+            <div class="figure-note">FIG.A5 — 四条路径的物理保真度均在门槛之下（相对示意，非测量值）</div>
+        </div>
+
+        <p class="prose">注意共性：<strong>四条路径缺的都是同一样东西——与真实部署场景对齐的物理量。</strong>这不是某条路径的工程瑕疵，而是供给侧的结构性缺失：真实场景的物理本身还没有被建模、被供给。</p>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ A5 遥操作成本 ═══════════════ -->
+    <section id="a5">
+        <span class="mono section-label">A5 · Teleoperation Cost</span>
+        <h2 class="section-title">遥操作成本对比：暴力采集为什么走不通</h2>
+
+        <p class="prose">四条路径里物理保真度最高的遥操作，成本是硬约束：<strong>约 2,000 元/小时</strong>（Gartner）。按 1,000 万小时的需求量测算，纯遥操作采集需要约 <strong>200 亿元</strong>，还要叠加无法规模化的人力组织——这条路在商业上不成立。</p>
+
+        <div class="svg-container">
+            <svg viewBox="0 0 820 380" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, Consolas, monospace">
+                <rect x="0" y="0" width="820" height="380" fill="white"/>
+                <!-- axis -->
+                <line x1="80" y1="300" x2="775" y2="300" stroke="#1a1a1a" stroke-width="1"/>
+                <text x="34" y="50" font-size="10" fill="#757575" transform="rotate(-90,34,88)">单小时数据成本（元）</text>
+                <!-- bar 1: 遥操作 2000 元 → height 220 -->
+                <rect x="200" y="80" width="110" height="220" fill="#1a1a1a"/>
+                <text x="255" y="66" font-size="12.5" fill="#1a1a1a" font-weight="bold" text-anchor="middle">≈ 2,000 元</text>
+                <text x="255" y="322" font-size="11" fill="#1a1a1a" font-weight="bold" text-anchor="middle">遥操作采集</text>
+                <text x="255" y="340" font-size="9.5" fill="#757575" text-anchor="middle">Gartner · 人力密集</text>
+                <!-- bar 2: 仿真加速 10–100 元 → height ~11 (10元 at 0.11px/元 scale) -->
+                <rect x="500" y="289" width="110" height="11" fill="#1a1a1a"/>
+                <text x="555" y="275" font-size="12.5" fill="#1a1a1a" font-weight="bold" text-anchor="middle">≈ 10 – 100 元</text>
+                <text x="555" y="322" font-size="11" fill="#1a1a1a" font-weight="bold" text-anchor="middle">领域原生仿真加速</text>
+                <text x="555" y="340" font-size="9.5" fill="#757575" text-anchor="middle">单条数据成本降至 1/20 – 1/200</text>
+                <!-- annotation -->
+                <line x1="330" y1="150" x2="480" y2="150" stroke="#9a9a9a" stroke-width="0.9" stroke-dasharray="3,3"/>
+                <text x="405" y="136" font-size="11.5" fill="#2d4a3e" font-weight="bold" text-anchor="middle">成本差 20 – 200 倍</text>
+                <text x="412" y="366" font-size="10" fill="#9a9a9a" text-anchor="middle">前提：仿真必须按领域的物理真实建模——通用模板仿真省不了这笔账</text>
+            </svg>
+            <div class="figure-note">FIG.A6 — 数据获取成本：遥操作 vs 领域原生仿真</div>
+        </div>
+
+        <p class="prose">关键前提要讲清楚：<strong>能把成本打下来的，是与部署场景物理对齐的仿真</strong>——物理不对齐，仿真数据就不能用，成本账就不成立。这正是「领域原生」四个字值钱的地方。</p>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ A6 叠加结论 ═══════════════ -->
+    <section id="a6">
+        <span class="mono section-label">A6 · Compounding Conclusion</span>
+        <h2 class="section-title">叠加结论：Scaling Law 至今未出现</h2>
+
+        <div class="four-col">
+            <div class="cell">
+                <h4>① Token / 算力</h4>
+                <p>单任务 token 与算力消耗高，部署能力不随消耗线性增长。</p>
+            </div>
+            <div class="cell">
+                <h4>② 数据效率</h4>
+                <p>数据总量天量，有效物理知识极低——小时级视频或不及千词文本。</p>
+            </div>
+            <div class="cell">
+                <h4>③ 数据准度</h4>
+                <p>遥操作、ego、合成、视频学习四条路径，物理保真度全部在门槛之下。</p>
+            </div>
+            <div class="cell">
+                <h4>④ 结果</h4>
+                <p>三条叠加，机器人的 scaling law 至今未出现，gap 以各种形式暴露。</p>
+            </div>
+        </div>
+
+        <div class="value-box">
+            <span class="mono label">结论</span>
+            <p>gap 的根源不在模型参数，而在供给侧：<strong>场景数据与领域原生的物理建模严重不足。</strong>硬件已经跑在前面，等它的不是更大的模型，而是一层真实物理世界的基建——把部署场景变成机器可训练、可验证、可打分的物理数字基座，把数据获取成本打下 20–200 倍。<u>谁先把这一层做扎实，谁就把 gap 变成自己的 moat。</u>这正是 microNature 架构所对应的解法，详见<a class="xlink" href="mn0811.html">主文件</a>。</p>
+        </div>
+    </section>
+
+    <hr>
+
+    <!-- ═══════════════ SOURCES ═══════════════ -->
+    <section id="sources">
+        <span class="mono section-label">数据来源 · Sources</span>
+        <ul class="sources" style="margin-top:20px;">
+            <li>IFR《World Robotics》：中国制造业机器人密度 470 台/万名员工（2023），全球第三；全球平均 162 台；2023 年中国新增安装 27.6 万台，约占全球 51%。</li>
+            <li>Gartner 及行业估算：遥操作数据成本约 2,000 元/小时；人形机器人高质量数据缺口达万倍量级。</li>
+            <li>盖世汽车研究院：具身高质量数据存量约 50 万小时，通用能力需求约 1,000 万小时，缺口超 99%；物理 AI 数据量约为 LLM 语料的 1/20,000；仿真可将单条数据成本降至 1/20–1/200。</li>
+            <li>弗若斯特沙利文：中国具身智能解决方案市场规模 2030 年预计约 1,426 亿元。</li>
+            <li>注：FIG.A3 与 FIG.A5 为结构性示意（趋势与相对关系），非测量值；具体口径以尽调访谈与一手数据为准。</li>
+        </ul>
+    </section>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer>
+        <a class="footer-brand footer-brand-link" href="mn0811.html" title="返回主文件">microNature — <span style="font-size:15px; font-style:italic;">Insights · The Capability–Deployment Paradox</span></a>
+        <div class="footer-right">
+            <div class="mono" style="color: var(--ink); margin-bottom: 5px;">move fast and fix things · © 2026</div>
+            尽调材料 · 与主文件配套使用
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>
